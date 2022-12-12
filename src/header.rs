@@ -1,29 +1,39 @@
-/**
- * 头部读取每个字段
- * 格式化输出头部
-*/
+//! 头部读取每个字段 + 格式化输出头部
 
 use std::fmt::{Display, Formatter};
 use std::fs::File;
 use std::io::Read;
 
+/// 头部结构体
 #[derive(Debug)]
 pub struct Header {
+    /// 签名 魔数
     signature: Vec<u8>,
+    /// 版本号
     version: u8,
+    /// 格式号
     format: u8,
+    /// 6 字节, 0x1993发布年份+回车+换行+替换+换行, 起进一步校验, 若与预期不一样说明文件损坏
     luac_data: Vec<u8>,
+    /// cint 在 chunk 中占有字节数
     cint: u8,
+    /// size_t 在 chunk 中占有字节数
     size_t: u8,
+    /// 虚拟机指令在 chunk 中占有字节数
     vm: u8,
+    /// 整数在 chunk 中占有字节数
     integer_size: u8,
+    /// 浮点数在 chunk 中占有字节数
     number_size: u8,
+    /// 存放0x5678用来检查chunk的大小端
     int: Vec<u8>,
+    /// 存放浮点数370.5, 检查chunk浮点数格式
     num: Vec<u8>
 }
 
+/// 头部相关的方法是读取、验证
 impl Header {
-    // 从 chunk 中读取头部
+    /// 从 chunk 中读取头部, 传入 chunk 文件名
     pub fn new(file: &str) -> Header {
         let mut f = File::open(file).unwrap();
         let mut buf = vec![0; 33];
@@ -43,7 +53,7 @@ impl Header {
         }
     }
 
-    // 验证头部
+    /// 验证头部, 通过检查 Header 字段是否和预期一致
     pub fn check(&self) {
         if self.signature != [0x1B, 0x4C, 0x75, 0x61] {
             panic!("魔术识别失败");
@@ -71,7 +81,9 @@ impl Header {
     }
 }
 
+/// 将 Header 打印
 impl Display for Header {
+    /// 实现 fmt
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
