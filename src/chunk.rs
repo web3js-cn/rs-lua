@@ -1,3 +1,5 @@
+//! 读取 chunk 到 Chunk 结构体, 包含了头部、主函数 upvalues、主函数原型
+
 use std::fs;
 use crate::header;
 
@@ -67,31 +69,31 @@ enum Constant {
 /// 函数原型
 #[derive(Debug)]
 struct ProtoType {
-    // 由哪个文件编译而来
+    /// 由哪个文件编译而来
     source: String,
-    // 函数开始行号
+    /// 函数开始行号
     line_start: u32,
-    // 函数结束行号
+    /// 函数结束行号
     line_end: u32,
-    // 固定参数个数
+    /// 固定参数个数
     nums_params: u8,
-    // 是否 vararg
+    /// 是否 vararg
     is_vararg: u8,
-    // 寄存器数量
+    /// 寄存器数量
     max_stack_size: u8,
-    // 指令表
+    /// 指令表
     code: Vec<u32>,
-    // 常量表
+    /// 常量表
     constants: Vec<Constant>,
-    // Upvalue 表
+    /// Upvalue 表
     upvalues: Vec<Upvalue>,
-    // 子函数原型表
+    /// 子函数原型表
     protos: Vec<ProtoType>,
-    // 行号表
+    /// 行号表
     line_info: Vec<u32>,
-    // 局部变量表
+    /// 局部变量表
     loc_vars: Vec<LocVar>,
-    // upvalues 名列表
+    /// upvalues 名列表
     upvalue_names: Vec<String>
 }
 
@@ -118,26 +120,26 @@ impl MainFunc {
         self.stream.len() as i64
     }
 
-    // 读取一个字节
+    /// 读取一个字节
     fn readByte(&mut self) -> u8 {
         let res = self.stream[self.position];
         self.position += 1;
         res
     }
 
-    // 读取多个字节 nums: 读取的字节数
+    /// 读取多个字节 nums: 读取的字节数
     fn readBytes(&mut self, nums: i64) -> Vec<u8> {
         let res = self.stream[self.position..(self.position+nums as usize)].to_vec();
         self.position += nums as usize;
         res
     }
 
-    // lua 整数读取
+    /// lua 整数读取
     fn readLuaInteger(&mut self) -> u64 {
         u64::from_le_bytes(<[u8; 8]>::try_from(self.readBytes(8)).unwrap())
     }
 
-    // lua 浮点数读取
+    /// lua 浮点数读取
     fn readLuaNumber(&mut self) -> f64 {
         f64::from_le_bytes(<[u8; 8]>::try_from(self.readBytes(8)).unwrap())
     }
@@ -148,17 +150,17 @@ impl MainFunc {
         // println!("{:?}", self.readBytes(4));
     }
 
-    // 读取一个 u32
+    /// 读取一个 u32
     fn readU32(&mut self) -> u32 {
         u32::from_le_bytes(<[u8; 4]>::try_from(self.readBytes(4)).unwrap())
     }
 
-    // 读取一个 u64
+    /// 读取一个 u64
     fn readU64(&mut self) -> u64 {
         u64::from_le_bytes(<[u8; 8]>::try_from(self.readBytes(4)).unwrap())
     }
 
-    // 读取字符串
+    /// 读取字符串
     fn readString(&mut self) -> String {
         let mut size = self.readByte();
         // 空字符串
@@ -174,7 +176,7 @@ impl MainFunc {
         String::from_utf8(res).unwrap()
     }
 
-    // 指令表读取
+    /// 指令表读取
     fn readCode(&mut self) -> Vec<u32> {
         let mut vec = Vec::with_capacity(self.readU32() as usize);
         for i in 0..vec.capacity() {
@@ -183,7 +185,7 @@ impl MainFunc {
         vec
     }
 
-    // 读取一个常量
+    /// 读取一个常量
     fn readConstant(&mut self) -> Constant {
         match self.readByte() {
             TAG_NIL => return Constant::TAG_NIL,
@@ -196,7 +198,7 @@ impl MainFunc {
         }
     }
 
-    // 常量表读取
+    /// 常量表读取
     fn readConstants(&mut self) -> Vec<Constant> {
         let mut vec = Vec::with_capacity(self.readU32() as usize);
         for i in 0..vec.capacity() {
@@ -205,7 +207,7 @@ impl MainFunc {
         vec
     }
 
-    // Upvalues 表读取
+    /// Upvalues 表读取
     fn readUpvalues(&mut self) -> Vec<Upvalue> {
         let mut vec = Vec::with_capacity(self.readU32() as usize);
         for i in 0..vec.capacity() {
@@ -214,7 +216,7 @@ impl MainFunc {
         vec
     }
 
-    // 行号表读取
+    /// 行号表读取
     fn readLineInfo(&mut self) -> Vec<u32> {
         let mut vec = Vec::with_capacity(self.readU32() as usize);
         for i in 0..vec.capacity() {
@@ -223,7 +225,7 @@ impl MainFunc {
         vec
     }
 
-    // 局部变量表读取
+    /// 局部变量表读取
     fn readLocVars(&mut self) -> Vec<LocVar> {
         let mut vec = Vec::with_capacity(self.readU32() as usize);
         for i in 0..vec.capacity() {
@@ -236,7 +238,7 @@ impl MainFunc {
         vec
     }
 
-    // Upvalue名列表
+    /// Upvalue名列表
     fn readUpvalueNames(&mut self) -> Vec<String> {
         let mut vec = Vec::with_capacity(self.readU32() as usize);
         for i in 0..vec.capacity() {
