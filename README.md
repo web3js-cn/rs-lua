@@ -51,4 +51,35 @@ pub struct Chunk {
     /// 主函数原型
     mainFunc: ProtoType
 }
+
+/// 函数原型
+#[derive(Debug)]
+struct ProtoType {
+    /// 由哪个文件编译而来
+    source: String,
+    /// 函数开始行号
+    line_start: u32,
+    /// 函数结束行号
+    line_end: u32,
+    /// 固定参数个数
+    nums_params: u8,
+    /// 是否 vararg
+    is_vararg: u8,
+    /// 寄存器数量
+    max_stack_size: u8,
+    /// 指令表
+    code: Vec<u32>,
+    /// 常量表
+    constants: Vec<Constant>,
+    /// Upvalue 表
+    upvalues: Vec<Upvalue>,
+    /// 子函数原型表
+    protos: Vec<ProtoType>,
+    /// 行号表
+    line_info: Vec<u32>,
+    /// 局部变量表
+    loc_vars: Vec<LocVar>,
+    /// upvalues 名列表
+    upvalue_names: Vec<String>
+}
 ```
