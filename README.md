@@ -16,6 +16,7 @@ cargo doc --open
 + 2022-12-12 12.16 完成了从 chunk 中读取头部并进行验证(header.rs)
 + 2022-12-13 20.06 读取 chunk 到 Chunk 结构体, 包含了头部、主函数 upvalues、主函数原型(chunk.rs)
 + 2022-12-14 18.17 完成指令集的读取与解释, 从中提取出操作码等信息(opcodes.rs)
++ 2022-12-14 23.04 实现了一个简易的 LuaState 和 LuaStack(lua_state.rs lua_stack.rs)
 
 ## 进度
 + 2022-12-12 12.16 完成了从 chunk 中读取头部并进行验证(header.rs)
@@ -108,5 +109,22 @@ struct OpCode {
     op_mode: u8,
     /// 操作码名称
     name: String
+}
+```
++ 2022-12-14 23.04 实现了一个简易的 LuaState 和 LuaStack(lua_state.rs lua_stack.rs)
+```rs
+/// 解释器状态
+#[derive(Debug)]
+pub struct luaState {
+    pub statck: luaStack
+}
+
+/// luaStack 虚拟栈
+#[derive(Debug)]
+pub struct luaStack {
+    /// 存放值
+    slots: Vec<luaValue>,
+    /// 栈顶索引
+    pub(crate) top: i64
 }
 ```
