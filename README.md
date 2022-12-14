@@ -3,6 +3,10 @@
 
 
 ## 使用
+使用
+```bash
+cargo run
+```
 文档查看
 ```bash
 cargo doc --open
