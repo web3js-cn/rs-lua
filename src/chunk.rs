@@ -11,7 +11,7 @@ pub struct Chunk {
     /// 主函数 upvalues 数量
     sizeUpvalues: u8,
     /// 主函数原型
-    mainFunc: ProtoType
+    pub mainFunc: ProtoType
 }
 
 impl Chunk {
@@ -68,7 +68,7 @@ enum Constant {
 
 /// 函数原型
 #[derive(Debug)]
-struct ProtoType {
+pub struct ProtoType {
     /// 由哪个文件编译而来
     source: String,
     /// 函数开始行号
@@ -82,7 +82,7 @@ struct ProtoType {
     /// 寄存器数量
     max_stack_size: u8,
     /// 指令表
-    code: Vec<u32>,
+    pub code: Vec<u32>,
     /// 常量表
     constants: Vec<Constant>,
     /// Upvalue 表
@@ -99,14 +99,14 @@ struct ProtoType {
 
 /// 用来从 chunk 读取数据的工具包
 #[derive(Debug)]
-struct MainFunc {
+pub struct MainFunc {
     stream: Vec<u8>,
     position: usize
 }
 
 impl MainFunc {
     /// 跳过 header 读取主函数原型
-    fn new(file: &str) -> MainFunc {
+    pub fn new(file: &str) -> MainFunc {
         let v = fs::read(file).unwrap();
         // println!("主函数 Upvalue 数量: {}", v[33]);
         MainFunc {
@@ -257,7 +257,7 @@ impl MainFunc {
     }
 
     /// 函数原型读取
-    fn readProto(&mut self, parentSource: String) -> ProtoType {
+    pub fn readProto(&mut self, parentSource: String) -> ProtoType {
         let mut source = self.readString();
         if source == "".to_string() { source = parentSource; }
 
