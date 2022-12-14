@@ -11,6 +11,7 @@ cargo doc --open
 ## 进度纵观
 + 2022-12-12 12.16 完成了从 chunk 中读取头部并进行验证(header.rs)
 + 2022-12-13 20.06 读取 chunk 到 Chunk 结构体, 包含了头部、主函数 upvalues、主函数原型(chunk.rs)
++ 2022-12-14 18.17 完成指令集的读取与解释, 从中提取出操作码等信息(opcodes.rs)
 
 ## 进度
 + 2022-12-12 12.16 完成了从 chunk 中读取头部并进行验证(header.rs)
@@ -84,5 +85,24 @@ struct ProtoType {
     loc_vars: Vec<LocVar>,
     /// upvalues 名列表
     upvalue_names: Vec<String>
+}
+```
++ 2022-12-14 18.17 完成指令集的读取与解释, 从中提取出操作码等信息(opcodes.rs)
+```rs
+/// 每条指令基本信息
+#[derive(Debug)]
+struct OpCode {
+    /// 编码模式
+    test_flag: u8,
+    /// 是否设置寄存器A
+    set_a_flag: u8,
+    /// 操作数B的使用类型
+    arg_b_mode: u8,
+    /// 操作数C的使用类型
+    arg_c_mode: u8,
+    /// 使用类型
+    op_mode: u8,
+    /// 操作码名称
+    name: String
 }
 ```
