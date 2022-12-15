@@ -11,53 +11,53 @@ const IAsBx: u8 = 2;
 const IAx: u8 = 3;
 
 /// 操作码 用于识别指令 操作码常量
-const OP_MOVE: u8 = 0;
-const OP_LOADK: u8 = 1;
-const OP_LOADKX: u8 = 2;
-const OP_LOADBOOL: u8 = 3;
-const OP_LOADNIL: u8 = 4;
-const OP_GETUPVAL: u8 = 5;
-const OP_GETTABUP: u8 = 6;
-const OP_GETTABLE: u8 = 7;
-const OP_SETTABUP: u8 = 8;
-const OP_SETUPVAL: u8 = 9;
-const OP_SETTABLE: u8 = 10;
-const OP_NEWTABLE: u8 = 11;
-const OP_SELF: u8 = 12;
-const OP_ADD: u8 = 13;
-const OP_SUB: u8 = 14;
-const OP_MUL: u8 = 15;
-const OP_MOD: u8 = 16;
-const OP_POW: u8 = 17;
-const OP_DIV: u8 = 18;
-const OP_IDIV: u8 = 19;
-const OP_BAND: u8 = 20;
-const OP_BOR: u8 = 21;
-const OP_BXOR: u8 = 22;
-const OP_SHL: u8 = 23;
-const OP_SHR: u8 = 24;
-const OP_UNM: u8 = 25;
-const OP_BNOT: u8 = 26;
-const OP_NOT: u8 = 27;
-const OP_LEN: u8 = 28;
-const OP_CONCAT: u8 = 29;
-const OP_JMP: u8 = 30;
-const OP_EQ: u8 = 31;
-const OP_LT: u8 = 32;
-const OP_LE: u8 = 33;
-const OP_TEST: u8 = 34;
-const OP_TESTSET: u8 = 35;
-const OP_CALL: u8 = 36;
-const OP_TAILCALL: u8 = 37;
-const OP_RETURN: u8 = 38;
-const OP_FORLOOP: u8 = 39;
-const OP_FORPREP: u8 = 40;
-const OP_TFORCALL: u8 = 41;
-const OP_TFORLOOP: u8 = 42;
-const OP_SETLIST: u8 = 43;
-const OP_CLOSURE: u8 = 44;
-const OP_VARARG: u8 = 45;
-const OP_EXTRAARG: u8 = 46;
+pub const OP_MOVE: u8 = 0;
+pub const OP_LOADK: u8 = 1;
+pub const OP_LOADKX: u8 = 2;
+pub const OP_LOADBOOL: u8 = 3;
+pub const OP_LOADNIL: u8 = 4;
+pub const OP_GETUPVAL: u8 = 5;
+pub const OP_GETTABUP: u8 = 6;
+pub const OP_GETTABLE: u8 = 7;
+pub const OP_SETTABUP: u8 = 8;
+pub const OP_SETUPVAL: u8 = 9;
+pub const OP_SETTABLE: u8 = 10;
+pub const OP_NEWTABLE: u8 = 11;
+pub const OP_SELF: u8 = 12;
+pub const OP_ADD: u8 = 13;
+pub const OP_SUB: u8 = 14;
+pub const OP_MUL: u8 = 15;
+pub const OP_MOD: u8 = 16;
+pub const OP_POW: u8 = 17;
+pub const OP_DIV: u8 = 18;
+pub const OP_IDIV: u8 = 19;
+pub const OP_BAND: u8 = 20;
+pub const OP_BOR: u8 = 21;
+pub const OP_BXOR: u8 = 22;
+pub const OP_SHL: u8 = 23;
+pub const OP_SHR: u8 = 24;
+pub const OP_UNM: u8 = 25;
+pub const OP_BNOT: u8 = 26;
+pub const OP_NOT: u8 = 27;
+pub const OP_LEN: u8 = 28;
+pub const OP_CONCAT: u8 = 29;
+pub const OP_JMP: u8 = 30;
+pub const OP_EQ: u8 = 31;
+pub const OP_LT: u8 = 32;
+pub const OP_LE: u8 = 33;
+pub const OP_TEST: u8 = 34;
+pub const OP_TESTSET: u8 = 35;
+pub const OP_CALL: u8 = 36;
+pub const OP_TAILCALL: u8 = 37;
+pub const OP_RETURN: u8 = 38;
+pub const OP_FORLOOP: u8 = 39;
+pub const OP_FORPREP: u8 = 40;
+pub const OP_TFORCALL: u8 = 41;
+pub const OP_TFORLOOP: u8 = 42;
+pub const OP_SETLIST: u8 = 43;
+pub const OP_CLOSURE: u8 = 44;
+pub const OP_VARARG: u8 = 45;
+pub const OP_EXTRAARG: u8 = 46;
 
 /// 操作数类型
 /// 参数不被使用
@@ -81,7 +81,7 @@ struct OpCode {
     /// 使用类型
     op_mode: u8,
     /// 操作码名称
-    name: String
+    name: String,
 }
 
 /// 完整的指令表
@@ -166,7 +166,7 @@ impl Instruction {
     }
 
     /// 从 iABC 模式提取参数
-    fn iABC(&mut self) -> (i64, i64, i64) {
+    pub(crate) fn iABC(&mut self) -> (i64, i64, i64) {
         // println!("{}", self.code);
         let a = self.code >> 6 & 0xFF;
         let b = self.code >> 14 & 0x1FF;
@@ -175,20 +175,20 @@ impl Instruction {
     }
 
     /// 从 iABx 模式提取参数
-    fn iABx(&mut self) -> (i64, i64) {
+    pub(crate) fn iABx(&mut self) -> (i64, i64) {
         let a = self.code >> 6 & 0xFF;
         let b = self.code >> 14 & 0x1FF;
         (a as i64, b as i64)
     }
 
     /// 从 iAsBx 模式提取参数
-    fn iAsBx(&mut self) -> (i64, i64) {
+    pub(crate) fn iAsBx(&mut self) -> (i64, i64) {
         let (a, b) = self.iABx();
         (a as i64, (b - MAXARG_sBx as i64) as i64)
     }
 
     /// 从 iAx 模式提取参数
-    fn iAx(&mut self) -> i64 {
+    pub(crate) fn iAx(&mut self) -> i64 {
         (self.code >> 6) as i64
     }
 
