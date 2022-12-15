@@ -1,5 +1,6 @@
 //! lua state 封装了整个解释器状态
 
+use crate::chunk::ProtoType;
 use crate::lua_stack::{luaStack, luaValue};
 use crate::math::arith::{Arith, Operator, operators};
 use crate::math::consts::{LUA_OPBNOT, LUA_OPUNM};
@@ -8,14 +9,20 @@ use crate::math::Math;
 /// 解释器状态
 #[derive(Debug)]
 pub struct luaState {
-    pub statck: luaStack
+    pub statck: luaStack,
+    /// 保存函数原型
+    pub(crate) proto: ProtoType,
+    /// 程序计数器
+    pub(crate) pc: i64
 }
 
 impl luaState {
     /// 创建 luaState 实例
-    pub(crate) fn new() -> luaState {
+    pub(crate) fn new(stackSize: i64, proto: ProtoType) -> luaState {
         luaState {
-            statck: luaStack::newLuaStack(20)
+            statck: luaStack::newLuaStack(20),
+            proto: proto,
+            pc: 0
         }
     }
 }
@@ -33,20 +40,20 @@ impl luaState {
     }
 
     /// 检查栈的剩余空间
-    fn CheckState(&mut self, n: i64) -> bool {
+    pub(crate) fn CheckState(&mut self, n: i64) -> bool {
         self.statck.check(n);
         return true
     }
 
     /// 从栈顶弹出 n 个值
-    fn Pop(&mut self, n: i64) {
+    pub(crate) fn Pop(&mut self, n: i64) {
         for i in 0..n {
             self.statck.pop();
         }
     }
 
     /// 将值从一个位置复制到另一个位置
-    fn Copy(&mut self, fromIdx: i64, toIdx: i64) {
+    pub(crate) fn Copy(&mut self, fromIdx: i64, toIdx: i64) {
         let val = self.statck.get(fromIdx);
         self.statck.set(toIdx, val.unwrap());
     }
@@ -174,7 +181,7 @@ impl luaState {
     fn IsInteger(&mut self, idx: i64) -> bool {
         true
     }
-    fn ToBoolean(&mut self, idx: i64) -> bool {
+    pub(crate) fn ToBoolean(&mut self, idx: i64) -> bool {
         let val = self.statck.get(idx);
         luaState::covertToBoolean(val.unwrap())
     }
