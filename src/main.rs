@@ -1,8 +1,13 @@
+use crate::math::consts::{LUA_OPADD, LUA_OPBNOT, LUA_OPEQ};
+use crate::math::arith::ArithOp;
+use crate::math::compare::CompareOp;
+
 pub mod header;
 pub mod chunk;
 pub mod opcodes;
 pub mod lua_stack;
 pub mod lua_state;
+pub mod math;
 
 fn main() {
     // 从 chunk 中读取头部 Header 并检查 check()
@@ -33,14 +38,29 @@ fn main() {
 
 
     // 测试简易 luastate 的各种栈操作
+    // let mut ls = lua_state::luaState::new();
+    // ls.PushBoolean(true); println!("{:?}", ls.statck);
+    // ls.PushInteger(10); println!("{:?}", ls.statck);
+    // ls.PushNil(); println!("{:?}", ls.statck);
+    // ls.PushString("hello".to_string()); println!("{:?}", ls.statck);
+    // ls.PushValue(-4); println!("{:?}", ls.statck);
+    // ls.Replace(3); println!("{:?}", ls.statck);
+    // ls.SetTop(6); println!("{:?}", ls.statck);
+    // ls.Remove(-3); println!("{:?}", ls.statck);
+    // ls.SetTop(-5); println!("{:?}", ls.statck);
+
+
+    // 测试运算符
     let mut ls = lua_state::luaState::new();
-    ls.PushBoolean(true); println!("{:?}", ls.statck);
-    ls.PushInteger(10); println!("{:?}", ls.statck);
-    ls.PushNil(); println!("{:?}", ls.statck);
-    ls.PushString("hello".to_string()); println!("{:?}", ls.statck);
-    ls.PushValue(-4); println!("{:?}", ls.statck);
-    ls.Replace(3); println!("{:?}", ls.statck);
-    ls.SetTop(6); println!("{:?}", ls.statck);
-    ls.Remove(-3); println!("{:?}", ls.statck);
-    ls.SetTop(-5); println!("{:?}", ls.statck);
+    ls.PushInteger(1);
+    ls.PushString("2.0".to_string());
+    ls.PushString("3.0".to_string());
+    ls.PushNumber(4.0);
+    println!("{:?}", ls.statck);
+    ls.Arith(LUA_OPADD as ArithOp); println!("{:?}", ls.statck);
+    ls.Arith(LUA_OPBNOT as ArithOp); println!("{:?}", ls.statck);
+    ls.Len(2); println!("{:?}", ls.statck);
+    ls.Concat(3); println!("{:?}", ls.statck);
+    let b = ls.Compare(1, 2, LUA_OPEQ as CompareOp);
+    ls.PushBoolean(b); println!("{:?}", ls.statck);
 }
