@@ -57,7 +57,7 @@ const TAG_LONG_STR: u8 = 0x14;
 
 /// 常量定义
 #[derive(Debug)]
-enum Constant {
+pub enum Constant {
     TAG_NIL,
     TAG_BOOLEAN(u8),
     TAG_NUMBER(f64),
@@ -84,7 +84,7 @@ pub struct ProtoType {
     /// 指令表
     pub code: Vec<u32>,
     /// 常量表
-    constants: Vec<Constant>,
+    pub(crate) constants: Vec<Constant>,
     /// Upvalue 表
     upvalues: Vec<Upvalue>,
     /// 子函数原型表
