@@ -18,6 +18,7 @@ cargo doc --open
 + 2022-12-14 18.17 完成指令集的读取与解释, 从中提取出操作码等信息(opcodes.rs)
 + 2022-12-14 23.04 实现了一个简易的 LuaState 和 LuaStack(lua_state.rs lua_stack.rs)
 + 2022-12-15 12.42 实现了 25 个运算符 (math/)
++ 2022-12-15 19.07 实现简易 VM, 但是有不少 bug, 需要进一步修改 (vm/)
 
 ## 进度
 + 2022-12-12 12.16 完成了从 chunk 中读取头部并进行验证(header.rs)
@@ -138,4 +139,12 @@ pub fn Arith(&mut self, op: ArithOp);
 pub(crate) fn Compare(&mut self, idx1: i64, idx2: i64, op: CompareOp) -> bool;
 pub fn Concat(&mut self, n: i64);
 pub fn Len(&mut self, idx: i64);
+```
++ 2022-12-15 19.07 实现简易 VM, 但是有不少 bug, 需要进一步修改 (vm/)
+```rs
+pub mod inst_operators;
+pub mod inst_load;
+pub mod r#for;
+pub mod inst_misc;
+pub mod execute;
 ```
