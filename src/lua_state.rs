@@ -1,6 +1,9 @@
 //! lua state 封装了整个解释器状态
 
 use crate::lua_stack::{luaStack, luaValue};
+use crate::math::arith::{Arith, Operator, operators};
+use crate::math::consts::{LUA_OPBNOT, LUA_OPUNM};
+use crate::math::Math;
 
 /// 解释器状态
 #[derive(Debug)]
@@ -111,7 +114,7 @@ impl luaState {
     pub(crate) fn PushNil(&mut self) { self.statck.push(luaValue::NIL(None)); }
     pub(crate) fn PushBoolean(&mut self, b: bool) { self.statck.push(luaValue::BOOL(b)); }
     pub(crate) fn PushInteger(&mut self, n: i64) { self.statck.push(luaValue::I64(n)); }
-    fn PushNumber(&mut self, n: f64) { self.statck.push(luaValue::F64(n)); }
+    pub(crate) fn PushNumber(&mut self, n: f64) { self.statck.push(luaValue::F64(n)); }
     pub(crate) fn PushString(&mut self, s: String) { self.statck.push(luaValue::Str(s)); }
 }
 
@@ -161,7 +164,7 @@ impl luaState {
     fn IsBoolean(&mut self, idx: i64) -> bool {
         self.Type(idx) == LUA_TBOOLEAN as LuaType
     }
-    fn IsString(&mut self, idx: i64) -> bool {
+    pub(crate) fn IsString(&mut self, idx: i64) -> bool {
         let t = self.Type(idx);
         t == LUA_TSTRING as LuaType || t == LUA_TNUMBER as LuaType
     }
@@ -199,12 +202,15 @@ impl luaState {
         //         luaValue::Str(_) => { return "String".to_string(); }
         //     }
         // }
-        let val = self.statck.get(idx).unwrap();
-        match val {
-            luaValue::F64(f) => (f, true),
-            luaValue::I64(i) => (i as f64, true),
-            _ => (0 as f64, false)
-        }
+        // let val = self.statck.get(idx).unwrap();
+        // match val {
+        //     luaValue::F64(f) => (f, true),
+        //     luaValue::I64(i) => (i as f64, true),
+        //     _ => (0 as f64, false)
+        // }
+
+        let val = self.statck.get(idx);
+        Math::convertToFloat(val.unwrap())
     }
 
     // 从指定索引处取一个整数值
@@ -234,12 +240,10 @@ impl luaState {
             _ => ("".to_string(), false)
         }
     }
-    fn ToString(&mut self, idx: i64) -> String {
+    pub(crate) fn ToString(&mut self, idx: i64) -> String {
         self.ToStringX(idx).0
     }
 }
-
-type LuaType = i64;
 
 /// Lua 官方实现里为每种数据类型都定义了一个常量值
 /// 无效索引对应 LUA_TNONE(invalid)
@@ -253,3 +257,6 @@ const LUA_TTABLE: i8 = 5;
 const LUA_TFUNCTION: i8 = 6;
 const LUA_TUSERDATA: i8 = 7;
 const LUA_TTHREAD: i8 = 8;
+
+/// Lua值类型的别名
+type LuaType = i64;
