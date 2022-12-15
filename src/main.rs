@@ -8,6 +8,7 @@ pub mod opcodes;
 pub mod lua_stack;
 pub mod lua_state;
 pub mod math;
+pub mod vm;
 
 fn main() {
     // 从 chunk 中读取头部 Header 并检查 check()
@@ -51,16 +52,22 @@ fn main() {
 
 
     // 测试运算符
-    let mut ls = lua_state::luaState::new();
-    ls.PushInteger(1);
-    ls.PushString("2.0".to_string());
-    ls.PushString("3.0".to_string());
-    ls.PushNumber(4.0);
-    println!("{:?}", ls.statck);
-    ls.Arith(LUA_OPADD as ArithOp); println!("{:?}", ls.statck);
-    ls.Arith(LUA_OPBNOT as ArithOp); println!("{:?}", ls.statck);
-    ls.Len(2); println!("{:?}", ls.statck);
-    ls.Concat(3); println!("{:?}", ls.statck);
-    let b = ls.Compare(1, 2, LUA_OPEQ as CompareOp);
-    ls.PushBoolean(b); println!("{:?}", ls.statck);
+    // let mut ls = lua_state::luaState::new();
+    // ls.PushInteger(1);
+    // ls.PushString("2.0".to_string());
+    // ls.PushString("3.0".to_string());
+    // ls.PushNumber(4.0);
+    // println!("{:?}", ls.statck);
+    // ls.Arith(LUA_OPADD as ArithOp); println!("{:?}", ls.statck);
+    // ls.Arith(LUA_OPBNOT as ArithOp); println!("{:?}", ls.statck);
+    // ls.Len(2); println!("{:?}", ls.statck);
+    // ls.Concat(3); println!("{:?}", ls.statck);
+    // let b = ls.Compare(1, 2, LUA_OPEQ as CompareOp);
+    // ls.PushBoolean(b); println!("{:?}", ls.statck);
+
+
+    // 执行 lua 主函数
+    let mut chunk = chunk::Chunk::new("src/luac.out");
+    let mut mainFunc = chunk.mainFunc;
+    println!("{:?}", mainFunc);
 }
