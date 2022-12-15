@@ -11,22 +11,24 @@ pub const LUA_OPMUL: u8 = 2;
 pub const LUA_OPMOD: u8 = 3;
 /// ^
 pub const LUA_OPPOW: u8 = 4;
-/// //
+/// /
 pub const LUA_OPDIV: u8 = 5;
+/// //
+pub const LUA_OPIDIV: u8 = 6;
 /// &
-pub const LUA_OPBAND: u8 = 6;
+pub const LUA_OPBAND: u8 = 7;
 /// |
-pub const LUA_OPBOR: u8 = 7;
+pub const LUA_OPBOR: u8 = 8;
 /// ~
-pub const LUA_OPBXOR: u8 = 8;
+pub const LUA_OPBXOR: u8 = 9;
 /// <<
-pub const LUA_OPSHL: u8 = 9;
+pub const LUA_OPSHL: u8 = 10;
 /// >>
-pub const LUA_OPSHR: u8 = 10;
+pub const LUA_OPSHR: u8 = 11;
 /// - (unary minus)
-pub const LUA_OPUNM: u8 = 11;
+pub const LUA_OPUNM: u8 = 12;
 /// ~
-pub const LUA_OPBNOT: u8 = 12;
+pub const LUA_OPBNOT: u8 = 13;
 
 /// 判断大小
 /// ==
