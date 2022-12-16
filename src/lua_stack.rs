@@ -29,7 +29,7 @@ impl luaValue {
 #[derive(Debug)]
 pub struct luaStack {
     /// 存放值
-    slots: Vec<luaValue>,
+    pub(crate) slots: Vec<luaValue>,
     /// 栈顶索引
     pub(crate) top: i64
 }
@@ -80,7 +80,7 @@ impl luaStack {
         if idx >= 0 {
             return idx;
         }
-        return idx + self.top + 1;
+        idx+self.top+1
     }
 
     /// 判断索引是否有效
@@ -100,9 +100,12 @@ impl luaStack {
 
     /// 向栈写入值
     pub(crate) fn set(&mut self, idx: i64, val: luaValue) {
+        // println!("self.top={};\t\t\t", self.top);
         let idx = self.absIndex(idx);
+        // println!("idx={}; self.top={}", idx, self.top);
         if idx > 0 && idx <= self.top {
-            self.slots[(idx-1) as usize] = val;
+            let idx = idx as usize -1;
+            self.slots[idx] = val;
             return;
         }
         panic!("invalid index, 索引无效")
