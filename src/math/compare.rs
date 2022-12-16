@@ -10,8 +10,13 @@ pub type CompareOp = i64;
 impl luaState {
     /// 对索引处的两个值进行比较
     pub(crate) fn Compare(&mut self, idx1: i64, idx2: i64, op: CompareOp) -> bool {
+        if !self.statck.isValid(idx1) || !self.statck.isValid(idx2) {
+            return false;
+        }
+
         let a = self.statck.get(idx1).unwrap();
         let b = self.statck.get(idx2).unwrap();
+        // println!("letA={:?}; letB={:?}", a, b);
         match op as u8 {
             LUA_OPEQ  => { return luaState::_eq(a, b); },
             LUA_OPLT => { return luaState::_lt(a, b); },
@@ -68,12 +73,10 @@ impl luaState {
         }
     }
 
-    /// 小于的操作
+    /// 小于的操作 <
     /// 仅对数字和字符串有意义
     fn _lt(a: luaValue, b: luaValue) -> bool {
         match a {
-            luaValue::NIL(_) => { panic!("nil, error") },
-            luaValue::BOOL(_) => { panic!("bool, error") },
             luaValue::I64(x) => {
                 if let luaValue::I64(y) = b {
                     return x < y;
@@ -95,6 +98,7 @@ impl luaState {
                     return x < y;
                 }
             },
+            _ => panic!("bool, error")
         }
         panic!("comparison error, 比较运算符失败, _lt()")
     }
@@ -102,31 +106,40 @@ impl luaState {
     /// 大于的操作
     /// 仅对数字和字符串有意义
     fn _le(a: luaValue, b: luaValue) -> bool {
+        // println!("//////////////_le() a={:?}; b={:?}", a, b);
         match a {
-            luaValue::NIL(_) => { panic!("nil, error") },
-            luaValue::BOOL(_) => { panic!("bool, error") },
             luaValue::I64(x) => {
                 if let luaValue::I64(y) = b {
-                    return x > y;
+                    return x <= y;
                 }
                 if let luaValue::F64(y) = b {
-                    return (x as f64) > y;
+                    return (x as f64) <= y;
                 }
             },
             luaValue::F64(x) => {
                 if let luaValue::I64(y) = b {
-                    return x > (y as f64);
+                    return x <= (y as f64);
                 }
                 if let luaValue::F64(y) = b {
-                    return x > y;
+                    return x <= y;
                 }
             },
             luaValue::Str(x) => {
                 if let luaValue::Str(y) = b {
-                    return x > y;
+                    return x < y;
                 }
             },
+            _ => panic!("bool, error")
         }
-        false
+        panic!("comparison error, 比较运算符失败, _lt()")
     }
 }
+
+
+/// 判断大小
+/// ==
+pub const LUA_OPEQ: u8 = 0;
+/// <
+pub const LUA_OPLT: u8 = 1;
+/// <=
+pub const LUA_OPLE: u8 = 2;
