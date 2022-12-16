@@ -109,10 +109,8 @@ impl luaState {
                 self.statck.pop();
             }
         } else if n < 0 {
-            let mut i = 0;
-            while i > n {
+            for _ in n..0 {
                 self.statck.push(luaValue::NIL(None));
-                i -= 1;
             }
         }
     }
@@ -195,7 +193,7 @@ impl luaState {
     }
 
     /// 从指定索引处取出一个值, 不是数字类型的话就进行转换
-    fn ToNumber(&mut self, idx: i64) -> f64 {
+    pub(crate) fn ToNumber(&mut self, idx: i64) -> f64 {
         let (n, _) = self.ToNumberX(idx);
         n
     }
@@ -217,6 +215,11 @@ impl luaState {
         // }
 
         let val = self.statck.get(idx);
+        // match val.unwrap() {
+        //     luaValue::I64(i) => { (i as f64, true) },
+        //     luaValue::F64(f) => { (f, true)},
+        //     _ => (0.0, false)
+        // }
         Math::convertToFloat(val.unwrap())
     }
 
