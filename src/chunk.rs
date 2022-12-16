@@ -18,7 +18,7 @@ impl Chunk {
     /// 读取 chunk
     pub fn new(file: &str) -> Chunk {
         let header = header::Header::new(file);
-        header.check();
+        // header.check();
 
         let v = fs::read(file).unwrap();
         let sizeUpvalues = v[33];
@@ -80,7 +80,7 @@ pub struct ProtoType {
     /// 是否 vararg
     is_vararg: u8,
     /// 寄存器数量
-    max_stack_size: u8,
+    pub(crate) max_stack_size: u8,
     /// 指令表
     pub code: Vec<u32>,
     /// 常量表
