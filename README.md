@@ -19,6 +19,7 @@ cargo doc --open
 + 2022-12-14 23.04 实现了一个简易的 LuaState 和 LuaStack(lua_state.rs lua_stack.rs)
 + 2022-12-15 12.42 实现了 25 个运算符 (math/)
 + 2022-12-15 19.07 实现简易 VM, 但是有不少 bug, 需要进一步修改 (vm/)
++ 2022-12-16 18.08 代码纠正, 成功计算 1+2+3+...+100 (*.rs)
 
 ## 进度
 + 2022-12-12 12.16 完成了从 chunk 中读取头部并进行验证(header.rs)
@@ -148,3 +149,4 @@ pub mod r#for;
 pub mod inst_misc;
 pub mod execute;
 ```
++ 2022-12-16 18.08 代码纠正, 成功计算 1+2+3+...+100 (*.rs)
