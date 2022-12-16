@@ -5,6 +5,8 @@
 ## 使用
 使用
 ```bash
+git clone https://github.com/web3js-cn/rs-lua.git
+cd rs-lua
 cargo run
 ```
 文档查看
