@@ -11,9 +11,12 @@ impl luaState {
         let (mut a, b, c) = Instruction::new(code).iABC();
         a += 1;
 
+        // println!("a={};b={};c={}", a, b, c);
         self.GetRK(b);
         self.GetRK(c);
         self.Arith(op);
+        // println!("binart arith luastack {:?}", self.statck);
+        // println!("binart arith a={}", a);
         self.Replace(a);
     }
 
