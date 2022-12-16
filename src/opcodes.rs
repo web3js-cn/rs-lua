@@ -149,7 +149,7 @@ impl OpCodes {
 
 /// 指令解码
 pub struct Instruction {
-    code: u32
+    pub(crate) code: u32
 }
 
 impl Instruction {
@@ -161,7 +161,7 @@ impl Instruction {
     }
 
     /// 提取操作码
-    fn opcode(&mut self) -> i64 {
+    pub(crate) fn opcode(&mut self) -> i64 {
         (self.code & 0x3F) as i64
     }
 
@@ -169,22 +169,24 @@ impl Instruction {
     pub(crate) fn iABC(&mut self) -> (i64, i64, i64) {
         // println!("{}", self.code);
         let a = self.code >> 6 & 0xFF;
-        let b = self.code >> 14 & 0x1FF;
-        let c = self.code >> 23 & 0x1FF;
+        let c = self.code >> 14 & 0x1FF;
+        let b = self.code >> 23 & 0x1FF;
         (a as i64, b as i64, c as i64)
     }
 
     /// 从 iABx 模式提取参数
     pub(crate) fn iABx(&mut self) -> (i64, i64) {
         let a = self.code >> 6 & 0xFF;
-        let b = self.code >> 14 & 0x1FF;
+        let b = self.code >> 14;
+        // println!("a={}; bx={}", a, b);
         (a as i64, b as i64)
     }
 
     /// 从 iAsBx 模式提取参数
     pub(crate) fn iAsBx(&mut self) -> (i64, i64) {
         let (a, b) = self.iABx();
-        (a as i64, (b - MAXARG_sBx as i64) as i64)
+        // println!("a={}; b={}", a, b-131071);
+        (a as i64, (b - 131071) as i64)
     }
 
     /// 从 iAx 模式提取参数
