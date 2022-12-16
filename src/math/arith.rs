@@ -13,12 +13,15 @@ pub type ArithOp = i64;
 /// 这是本文件的精髓
 impl luaState {
     pub fn Arith(&mut self, op: ArithOp) {
+        // println!("arith ---");
         let mut a: luaValue;
         let mut b = self.statck.pop();
 
         if op != LUA_OPUNM as ArithOp && op != LUA_OPBNOT as ArithOp {
             a = self.statck.pop();
+            // println!("{:?}", a);
         } else {
+            // println!("b clone()");
             a = b.clone();
         }
 
