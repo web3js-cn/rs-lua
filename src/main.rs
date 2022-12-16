@@ -1,6 +1,9 @@
+use crate::chunk::ProtoType;
+use crate::lua_state::luaState;
 use crate::math::consts::{LUA_OPADD, LUA_OPBNOT, LUA_OPEQ};
 use crate::math::arith::ArithOp;
 use crate::math::compare::CompareOp;
+use crate::opcodes::{Instruction, OP_RETURN};
 
 pub mod header;
 pub mod chunk;
@@ -69,5 +72,37 @@ fn main() {
     // 执行 lua 主函数
     let mut chunk = chunk::Chunk::new("src/luac.out");
     let mut mainFunc = chunk.mainFunc;
-    println!("{:?}", mainFunc);
+    luacMain(mainFunc);
+
+    // let mut test = Instruction::new(65549);
+    // println!("指令名={}", test.op_name());
+}
+
+/// 运行 lua 主函数
+fn luacMain(proto: ProtoType) {
+    let nRegs = proto.max_stack_size as i64;
+    let mut ls = luaState::new(nRegs+8, proto);
+
+    ls.SetTop(nRegs); println!("LuaStack 状态={:?}", ls.statck.slots);
+    let mut i = 0;
+    println!("指令表长度={}; 指令表={:?}", ls.proto.code.len(), ls.proto.code);
+    loop {
+        // println!("============= {} =================", i);
+        let pc = ls.PC();
+        let inst = ls.Fetch();
+        let mut inst = Instruction::new(inst);
+        // println!("pc={}", ls.PC());
+        // print!("指令名={}", inst.op_name());
+        if inst.opcode() != OP_RETURN as i64 {
+            print!("[{}]\t指令={}\t", i+1, inst.op_name());
+            print!("指令模式={}\t", inst.print_op_mode());
+            print!("ABC操作数={:?}\t", inst.printOperands());
+            ls.Execute(inst.code);
+            println!("栈情况={:?}", ls.statck.slots);
+            // println!("pc={}", ls.pc);
+        } else {
+            break;
+        }
+        i += 1;
+    }
 }
