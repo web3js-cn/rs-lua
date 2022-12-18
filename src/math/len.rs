@@ -10,6 +10,9 @@ impl luaState {
             luaValue::Str(x) => {
                 self.statck.push(luaValue::I64(x.len() as i64))
             },
+            luaValue::Table(t) => {
+                self.statck.push(luaValue::I64(t.borrow_mut().len()));
+            }
             _ => panic!("length error")
         }
     }
