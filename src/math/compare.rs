@@ -65,6 +65,7 @@ impl luaState {
                 }
                 return false;
             }
+            _ => { return false; }
         }
         if let a = b {
             return true;
