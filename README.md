@@ -22,6 +22,7 @@ cargo doc --open
 + 2022-12-15 12.42 实现了 25 个运算符 (math/)
 + 2022-12-15 19.07 实现简易 VM, 但是有不少 bug, 需要进一步修改 (vm/)
 + 2022-12-16 18.08 代码纠正, 成功计算 1+2+3+...+100 (*.rs)
++ 2022-12-18 15.49 实现了 Lua 表; 用表改写 1+2+3+...+100, 正确执行(table/)
 
 ## 进度
 + 2022-12-12 12.16 完成了从 chunk 中读取头部并进行验证(header.rs)
@@ -152,3 +153,16 @@ pub mod inst_misc;
 pub mod execute;
 ```
 + 2022-12-16 18.08 代码纠正, 成功计算 1+2+3+...+100 (*.rs)
+
++ 2022-12-18 15.49 实现了 Lua 表; 用表改写 1+2+3+...+100, 正确执行(table/)
+```rs
+/// LuaTable 数据结构 包含数组和HashMao
+#[derive(Debug, Clone)]
+pub struct LuaTable {
+    /// 存放数组部分
+    pub arr: Vec<luaValue>,
+    /// 存放哈希表部分
+    pub map: HashMap<luaValue, luaValue>,
+    rdm: usize, // hash code
+}
+```
