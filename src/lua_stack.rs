@@ -1,6 +1,9 @@
 //! Lua State 最基础的是内部封装了个特殊的栈
 
+use std::cell::RefCell;
 use std::mem::swap;
+use std::rc::Rc;
+use crate::table::LuaTable;
 
 /// lua 值的数据类型
 #[derive(Debug, Clone)]
@@ -9,7 +12,8 @@ pub enum luaValue {
     BOOL(bool),
     I64(i64),
     F64(f64),
-    Str(String)
+    Str(String),
+    Table(Rc<RefCell<LuaTable>>)
 }
 
 impl luaValue {
@@ -20,7 +24,8 @@ impl luaValue {
             luaValue::BOOL(_) => { return "bool".to_string(); },
             luaValue::I64(_) => { return "i64".to_string(); },
             luaValue::F64(_) => { return "f64".to_string(); },
-            luaValue::Str(_) => { return "String".to_string(); }
+            luaValue::Str(_) => { return "String".to_string(); },
+            luaValue::Table(_) => { return "Table".to_string() }
         }
     }
 }
@@ -45,11 +50,12 @@ impl luaStack {
 
     /// 检查栈的空闲空间是否还可以推入至少n个值, 不满足的话, 扩容
     pub fn check(&mut self, n: i64) {
-        let mut free = self.slots.len() as i64-self.top;
-        while free < n as usize as i64 {
-            self.slots.push(luaValue::NIL(None));
-            free += 1;
-        }
+        self.slots.reserve(n as usize);
+        // let mut free = self.slots.len() as i64-self.top;
+        // while free < n as usize as i64 {
+        //     self.slots.push(luaValue::NIL(None));
+        //     free += 1;
+        // }
     }
 
     /// 将值推入栈顶
