@@ -1,4 +1,5 @@
 //! 本文件为运算符的基础方法 为后续大类运算符作准备
+//! Lua 算术运算符都在本模块
 
 pub mod consts;
 pub mod arith;
@@ -14,7 +15,7 @@ pub struct Math;
 
 impl Math {
     /// 浮点数转整数
-    fn FloatToInteger(f: f64) -> (i64, bool) {
+    pub(crate) fn FloatToInteger(f: f64) -> (i64, bool) {
         let i = f as i64;
         (i, i as f64 == f)
     }
