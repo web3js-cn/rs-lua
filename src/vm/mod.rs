@@ -57,7 +57,7 @@ impl luaState {
     }
 
     /// 调用 GetConst 将某个常量推入栈顶 或者调用 PushValue 将某个索引处的栈值推入栈顶
-    fn GetRK(&mut self, rk: i64) {
+    pub(crate) fn GetRK(&mut self, rk: i64) {
         if rk > 0xFF {
             // constant
             self.GetConst(rk & 0xFF);
