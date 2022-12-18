@@ -9,15 +9,17 @@ impl luaState {
             self.statck.push(luaValue::Str("".to_string()));
         } else if n >= 2 {
             for i in 1..n {
+                // println!("\nstack = {:?}", self.statck);
+                // println!("str1={:?}; str2={:?}", self.statck.get(-1), self.statck.get(-2));
                 if self.IsString(-1) && self.IsString(-2) {
                     let s1 = self.ToString(-1);
                     let s2 = self.ToString(-2);
                     self.statck.pop();
                     self.statck.pop();
                     self.statck.push(luaValue::Str(format!("{}{}", s1, s2)));
-                    continue;
+                } else {
+                    panic!("concatenation error");
                 }
-                panic!("concatenation error");
             }
         }
         //n = 1, do nothing
