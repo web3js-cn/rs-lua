@@ -30,7 +30,7 @@ impl luaState {
 /// 基础栈操作方法定义在 luaState 里
 impl luaState {
     /// 返回栈顶索引
-    fn GetTop(&mut self) -> i64 {
+    pub(crate) fn GetTop(&mut self) -> i64 {
         self.statck.top
     }
 
@@ -141,7 +141,7 @@ impl luaState {
     }
 
     /// 根据索引返回值的类型, 如果无效, 返回LUA_TNONE
-    fn Type(&mut self, idx: i64) -> LuaType {
+    pub(crate) fn Type(&mut self, idx: i64) -> LuaType {
         if self.statck.isValid(idx) {
             let val = self.statck.get(idx).unwrap();
             match val {
@@ -150,7 +150,7 @@ impl luaState {
                 luaValue::F64(_) => return LUA_TNUMBER as LuaType,
                 luaValue::I64(_) => return LUA_TNUMBER as LuaType,
                 luaValue::BOOL(_) => return LUA_TBOOLEAN as LuaType,
-                _ => return 0
+                luaValue::Table(_)=> return LUA_TTABLE as LuaType,
             }
         }
         return LUA_TNONE as LuaType;
@@ -257,16 +257,16 @@ impl luaState {
 
 /// Lua 官方实现里为每种数据类型都定义了一个常量值
 /// 无效索引对应 LUA_TNONE(invalid)
-const LUA_TNONE: i8 = -1;
-const LUA_TNIL: i8 = 0;
-const LUA_TBOOLEAN: i8 = 1;
-const LUA_TLIGHTUSERDATA: i8 = 2;
-const LUA_TNUMBER: i8 = 3;
-const LUA_TSTRING: i8 = 4;
-const LUA_TTABLE: i8 = 5;
-const LUA_TFUNCTION: i8 = 6;
-const LUA_TUSERDATA: i8 = 7;
-const LUA_TTHREAD: i8 = 8;
+pub const LUA_TNONE: i8 = -1;
+pub const LUA_TNIL: i8 = 0;
+pub const LUA_TBOOLEAN: i8 = 1;
+pub const LUA_TLIGHTUSERDATA: i8 = 2;
+pub const LUA_TNUMBER: i8 = 3;
+pub const LUA_TSTRING: i8 = 4;
+pub const LUA_TTABLE: i8 = 5;
+pub const LUA_TFUNCTION: i8 = 6;
+pub const LUA_TUSERDATA: i8 = 7;
+pub const LUA_TTHREAD: i8 = 8;
 
 /// Lua值类型的别名
-type LuaType = i64;
+pub type LuaType = i64;
