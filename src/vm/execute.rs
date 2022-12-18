@@ -38,6 +38,10 @@ impl luaState {
         if name == "TESTSET  ".to_string() { self.testSet(code); }
         if name == "FORLOOP  ".to_string() { self.forLoop(code); }
         if name == "FORPREP  ".to_string() { self.forPrep(code); }
+        if name == "NEWTABLE".to_string() { self.NEWTABLE(code); }
+        if name == "SETTABLE".to_string() { self.SETTABLE(code); }
+        if name == "GETTABLF".to_string() { self.GETTABLE(code); }
+        if name == "SETLIST  ".to_string() { self.SETLIST(code); }
         // ...待补充
     }
 }
