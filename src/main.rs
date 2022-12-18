@@ -12,6 +12,7 @@ pub mod lua_stack;
 pub mod lua_state;
 pub mod math;
 pub mod vm;
+pub mod table;
 
 fn main() {
     // 从 chunk 中读取头部 Header 并检查 check()
@@ -96,7 +97,7 @@ fn luacMain(proto: ProtoType) {
         if inst.opcode() != OP_RETURN as i64 {
             print!("[{}]\t指令={}\t", i+1, inst.op_name());
             print!("指令模式={}\t", inst.print_op_mode());
-            print!("ABC操作数={:?}\t", inst.printOperands());
+            // print!("ABC操作数={:?}\t", inst.printOperands());
             ls.Execute(inst.code);
             println!("栈情况={:?}", ls.statck.slots);
             // println!("pc={}", ls.pc);
